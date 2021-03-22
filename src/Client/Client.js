@@ -31,6 +31,8 @@ class Client extends EventEmitter {
         })
 
         this.ws.on('message', (m) => {
+            
+
             this.emit('message', m)
         })
         
@@ -48,7 +50,7 @@ class Client extends EventEmitter {
                     "name": status,
                     "type": 0
                   }],
-                  "status": options.status || 'online',
+                  "status": options?.status || 'online',
                   "afk": false
                 }
               }

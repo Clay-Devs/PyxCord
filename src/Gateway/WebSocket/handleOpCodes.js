@@ -1,8 +1,10 @@
 const Heartbeat = require('./HeartBeat')
-
+const Message = require('../../methods/Message')
 
 module.exports = {
-    handleOpCodes: async (op, m, ws, cache) => {
+    handleOpCodes: async (op, m, ws, cache, emit) => {
+
+      //imagine using if statements lol, srsly change this
 
         if(op == 10) {
             //handle gateway connect
@@ -24,5 +26,18 @@ module.exports = {
                 }
               }))
         }
+
+
+
+
+        if(op == 0) {
+          switch (m.t){
+             case "MESSAGE_CREATE":
+               emit('message', new Message(m.d, ws))
+          }
+           
+        }
+
+
     }
 }

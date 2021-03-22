@@ -3,6 +3,7 @@ const WebSocketws = require('ws');
 const handleOpCodes = require('./handleOpCodes');
 
 
+
 class WebSocket extends EventEmitter {
     constructor(token, version, c) {
         super()
@@ -16,6 +17,7 @@ class WebSocket extends EventEmitter {
     async connect() {
         this.ws = new WebSocketws(`wss://gateway.discord.gg/?v=${this.version}&encoding=json`);
 
+        var _emit = (e, d) => { this.emit(e, d) } //have to do this for callback function
 
         this.ws.on('open', () => {
             this.ws.on('message', (m) => {
@@ -32,11 +34,9 @@ class WebSocket extends EventEmitter {
                     this.emit('allready')
                 }
 
-                if(msg.op == 0 && msg.t === 'MESSAGE_CREATE') {
-                    this.emit('message', msg.d)
-                }
-
-                handleOpCodes.handleOpCodes(msg.op, msg, this.ws, this.cache)
+                handleOpCodes.handleOpCodes(msg.op, msg, this.ws, this.cache, function (event, data) {
+                    _emit(event, data)
+                })
 
 
             })
